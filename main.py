@@ -17,8 +17,12 @@ def main(stdscr):
 
     # Dummy placeholders
     graph = None
-    chunks = ["This is a placeholder text chunk."]
-    embeddings = [[0.1, 0.2, 0.3]]  # fake embedding
+    chunks = [
+        "Cats are animals that like to play outside.",
+        "Dogs are loyal companions.",
+        "Birds can fly long distances."
+    ]
+    embeddings = generate_embeddings(chunks)
 
     while True:
         stdscr.clear()
@@ -42,12 +46,15 @@ def main(stdscr):
                 break
 
             if query:
-                # --- Hybrid Query + Chatbot response ---
-                results = hybrid_query(query, graph, embeddings, chunks)
-                answer = chat_with_llm(query, results)
+                # --- semantic search simple ---
+                results = semantic_search(query, embeddings, chunks, top_k=1)
+                answer = results[0] if results else "[no match]"
 
                 history.append("You: " + query)
-                history.append("Bot: " + (answer or "[no answer]"))
+                history.append("Bot: " + answer)
+                # # --- Hybrid Query + Chatbot response ---
+                # results = hybrid_query(query, graph, embeddings, chunks)
+                # answer = chat_with_llm(query, results)
 
             input_buffer = ""
         elif 32 <= key <= 126:  # Printable characters
