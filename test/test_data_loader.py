@@ -1,8 +1,9 @@
-import os
+from pathlib import Path
+from tempfile import NamedTemporaryFile
 
-import pytest
+import fitz
 
-from src.data_loader import chunk_text, load_text_file
+from src.data_loader import chunk_text, load_pdf_file, load_text_file
 
 SAMPLE_TEXT = "Python is a programming language created by Guido van Rossum in 1991."
 
@@ -33,3 +34,25 @@ def test_chunk_text():
     assert isinstance(chunks, list)
     assert all(isinstance(c, str) for c in chunks)
     assert len(chunks) >= 5  # since 100 / 20 = 5
+
+
+def test_load_pdf_file():
+
+    def create_test_pdf(text: str, path: str):
+        doc = fitz.open()
+        page = doc.new_page()
+        page.insert_text((72, 72), text)
+        doc.save(path)
+        doc.close()
+
+    test_text = "Hello, this is a test PDF."
+
+    with NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
+        create_test_pdf(test_text, tmp.name)
+        tmp_path = tmp.name
+
+    extracted_text = load_pdf_file(tmp_path)
+
+    assert test_text in extracted_text
+
+    Path(tmp_path).unlink()
