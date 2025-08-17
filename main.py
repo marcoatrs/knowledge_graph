@@ -1,4 +1,6 @@
 import curses
+import sys
+
 from src.data_loader import load_text_file, load_pdf_file, chunk_text
 from src.embeddings import generate_embeddings, semantic_search
 from src.knowledge_graph import build_knowledge_graph, query_graph
@@ -6,7 +8,7 @@ from src.hybrid_engine import hybrid_query
 from src.chatbot import chat_with_llm
 
 
-def main(stdscr):
+def main(stdscr, filepath: str):
     curses.curs_set(1)  # Show cursor
     stdscr.clear()
     height, width = stdscr.getmaxyx()
@@ -15,13 +17,15 @@ def main(stdscr):
     history = []
     input_buffer = ""
 
-    # Dummy placeholders
-    graph = None
-    chunks = [
-        "Cats are animals that like to play outside.",
-        "Dogs are loyal companions.",
-        "Birds can fly long distances."
-    ]
+    # Load File
+    if filepath.lower().endswith(".pdf"):
+        raw_text = load_pdf_file(filepath)
+    elif filepath.lower().endswith(".txt"):
+        raw_text = load_text_file(filepath)
+    else:
+        raise ValueError("Unsupported file type. Use .pdf or .txt")
+
+    chunks = chunk_text(raw_text, chunk_size=80)
     embeddings = generate_embeddings(chunks)
 
     while True:
@@ -62,4 +66,8 @@ def main(stdscr):
 
 
 if __name__ == "__main__":
-    curses.wrapper(main)
+    if len(sys.argv) < 2:
+        print("Usage: python main.py <file.pdf|file.txt>")
+        sys.exit(2)
+    filepath = sys.argv[1]
+    curses.wrapper(main, filepath)
