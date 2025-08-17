@@ -16,7 +16,7 @@ This project is an experimental Python system that combines:
 
 ## 🛠 Installation
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/marcoatrs/knowledge_graph.git
 cd knowledge_chat
 uv venv
 uv sync
