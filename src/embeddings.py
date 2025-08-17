@@ -1,3 +1,8 @@
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
+
 def generate_embeddings(chunks: list[str]) -> list[list[float]]:
     """Generate vector embeddings for each text chunk.
 
@@ -6,7 +11,8 @@ def generate_embeddings(chunks: list[str]) -> list[list[float]]:
     Returns:
         list[list[float]]: List of embedding vectors.
     """
-    pass
+    embeddings = model.encode(chunks, show_progress_bar=False)
+    return embeddings.tolist()
 
 
 def semantic_search(query: str,
