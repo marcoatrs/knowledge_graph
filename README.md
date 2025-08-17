@@ -20,3 +20,4 @@ git clone https://github.com/marcoatrs/knowledge_graph.git
 cd knowledge_chat
 uv venv
 uv sync
+```
