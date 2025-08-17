@@ -54,7 +54,12 @@ def build_knowledge_graph(triplets: list[tuple[str, str, str]]):
     Returns:
         object: Graph object (e.g., networkx.Graph or Neo4j connection).
     """
-    pass
+    graph = nx.DiGraph()
+    for subj, rel, obj in triplets:
+        graph.add_node(subj)
+        graph.add_node(obj)
+        graph.add_edge(subj, obj, relation=rel)
+    return graph
 
 
 def query_graph(graph, query: str) -> list[str]:
