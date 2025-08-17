@@ -9,6 +9,12 @@ def load_text_file(path: str) -> str:
     Returns:
         str: File content.
     """
+    file_path = Path(path)
+    if not file_path.exists():
+        return
+    with open(path, "r") as f:
+        file_content = f.read()
+    return file_content
 
 
 def load_pdf_file(path: str) -> str:
