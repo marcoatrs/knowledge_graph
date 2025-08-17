@@ -1,0 +1,15 @@
+[project]
+name = "knowledge-graph"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "networkx>=3.5",
+    "numpy>=2.3.2",
+    "pymupdf>=1.26.3",
+    "pytest>=8.4.1",
+    "scikit-learn>=1.7.1",
+    "sentence-transformers>=5.1.0",
+    "spacy>=3.8.7",
+]
