@@ -19,5 +19,4 @@ This project is an experimental Python system that combines:
 git clone <your-repo-url>
 cd knowledge_chat
 uv venv
-source .venv/bin/activate   # or .venv\Scripts\activate on Windows
-uv pip install -r requirements.txt
+uv sync
