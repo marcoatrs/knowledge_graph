@@ -1,3 +1,9 @@
+import spacy
+import networkx as nx
+
+nlp = spacy.load("en_core_web_sm")
+
+
 def extract_entities_relations(text: str) -> list[tuple[str, str, str]]:
     """Extract entities and relations from text using NLP.
 
@@ -6,7 +12,38 @@ def extract_entities_relations(text: str) -> list[tuple[str, str, str]]:
     Returns:
         list[tuple[str, str, str]]: List of triplets (entity1, relation, entity2).
     """
-    pass
+    doc = nlp(text)
+    triplets = []
+
+    for sent in doc.sents:
+        for token in sent:
+            if token.pos_ != "VERB":
+                continue
+            verb = token.lemma_
+            subject = None
+            obj = None
+
+            for child in token.children:
+                if "subj" in child.dep_:
+                    subject = child.text
+                    break
+
+            if not subject:
+                continue
+
+            for child in token.children:
+                if "obj" in child.dep_:
+                    obj = child.text
+                elif child.dep_ == "prep":
+                    for pobj in child.children:
+                        if pobj.dep_ != "pobj":
+                            continue
+                        obj = pobj.text
+
+            if obj:
+                triplets.append((subject, verb, obj))
+
+    return triplets
 
 
 def build_knowledge_graph(triplets: list[tuple[str, str, str]]):
